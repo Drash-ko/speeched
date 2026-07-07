@@ -1,0 +1,51 @@
+services:
+  llama:
+    image: ghcr.io/ggml-org/llama.cpp:server
+    container_name: voice-rec-llama
+    command: ["-m", "/voice-bot/models/Qwen2.5-3B-Instruct-Q4_K_M.gguf", "--host", "0.0.0.0", "--port", "8080", "-c", "2048"]
+    restart: unless-stopped
+    volumes:
+      - /home/umbrel/umbrel/home/voice-bot:/voice-bot
+    networks:
+      - voice-net
+
+  bot:
+    build: .
+    container_name: voice-rec-bot
+    restart: unless-stopped
+    depends_on:
+      llama:
+        condition: service_started
+    env_file:
+      - .env
+    environment:
+      LLAMA_MODE: api
+      LLAMA_API_URL: http://llama:8080
+      DEFAULT_WHISPER_MODEL: medium
+      DEFAULT_LLM_MODEL: qwen2.5-3b
+      DEFAULT_RECOGNITION_LANGUAGE: auto
+      DEFAULT_UI_LANGUAGE: uk
+      WHISPER_DEVICE: cpu
+      WHISPER_COMPUTE_TYPE: int8
+      DATABASE_PATH: /data/bot.db
+      WHISPER_CACHE_DIR: /whisper-cache
+      HF_HOME: /whisper-cache
+      HUGGINGFACE_HUB_CACHE: /whisper-cache/hub
+      LOG_FILE: /app/logs/bot.log
+      CACHE_TTL_SECONDS: "3600"
+      WORKER_COUNT: "1"
+      LLM_HTTP_RETRIES: "3"
+      LLM_STARTUP_RETRIES: "30"
+    volumes:
+      - /home/umbrel/umbrel/home/voice-bot/data:/data
+      - /home/umbrel/umbrel/home/voice-bot/whisper-cache:/whisper-cache
+      - bot-logs:/app/logs
+    networks:
+      - voice-net
+
+networks:
+  voice-net:
+    driver: bridge
+
+volumes:
+  bot-logs:

@@ -1,0 +1,18 @@
+# Optional per-user settings (loaded at bot startup for users not yet in SQLite).
+# whisper_model: medium | large-v3-turbo
+# llm_model: qwen2.5-3b (default) | qwen3-4b
+# language: auto (default) | en | uk | ru
+# ui_language: uk (default) | en
+# show_both_transcripts: false (default) | true
+# show_summary: false (default) | true
+#
+# Telegram UI changes are saved to SQLite automatically.
+#
+# users:
+#   123456789:
+#     whisper_model: large-v3-turbo
+#     language: uk
+#     ui_language: uk
+#     show_both_transcripts: true
+
+users: {}
