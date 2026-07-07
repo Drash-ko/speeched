@@ -4,7 +4,7 @@ Telegram bot for private voice-message transcription. It runs Whisper locally
 with `faster-whisper`, optionally asks a local llama.cpp/Qwen model to clean up
 punctuation, and stores short-lived transcript metadata in SQLite.
 
-![Speeched usage flow](docs/screenshots/telegram-flow.svg)
+![Speeched banner](docs/screenshots/speeched-banner.svg)
 
 ## Features
 
